@@ -32,6 +32,9 @@ use Shopify\Webhooks\Topics;
 | proxy rule for them in web/frontend/vite.config.js
 |
 */
+Route::get('/greeting', function () {
+    return 'Hello World';
+});
 
 Route::fallback(function (Request $request) {
     if (Context::$IS_EMBEDDED_APP &&  $request->query("embedded", false) === "1") {
