@@ -6,7 +6,7 @@ services:
     build:
       context: .
       args:
-        - APP_ENV=${APP_ENV}
+        - APP_ENV=local
     ports:
       - 9008:80
     volumes:
@@ -22,7 +22,7 @@ services:
     ports:
       - 3308:3306
     volumes:
-      - ./db:/var/lib/mysql
+      - ./.db:/var/lib/mysql
     environment:
       - MYSQL_ROOT_PASSWORD=password
       - MYSQL_USER=user
