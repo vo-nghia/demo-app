@@ -141,43 +141,16 @@ Route::post('/api/webhooks', function (Request $request) {
     }
 });
 
-Route::prefix('/api/stores')->as('stores.')->controller('StoreController')->group(function () {
-    Route::get('/', 'index')->name('index');
-    Route::get('/{stores}', 'detail')->name('detail');
-    Route::get('/create', 'create')->name('create');
-    Route::post('/', 'store')->name('store');
-    Route::get('/{store}/edit', 'show')->name('show');
-    Route::put('/{store}', 'update')->name('update');
-    Route::delete('/{store}', 'destroy')->name('destroy');
-});
 
-Route::prefix('/api/products')->controller('ProductController')->group(function () {
-    Route::get('/', 'index')->name('index');
-    Route::post('/create', 'create')->name('create');
-    Route::post('/update', 'update')->name('update');
-    Route::post('/delete', 'delete')->name('delete');
-});
+Route::resources([
+    '/api/products' => ProductsController::class,
+    '/api/orders' => OrdersController::class,
+    '/api/customers' => CustomersController::class,
+]);
 
-Route::prefix('/api/customers')->as('customers.')->controller('CustomersController')->group(function () {
-    Route::get('/', 'index')->name('index');
-    Route::get('/{customer}', 'detail')->name('detail');
-    Route::get('/create', 'create')->name('create');
-    Route::post('/', 'store')->name('store');
-    Route::get('/{customer}/edit', 'show')->name('show');
-    Route::put('/{customer}', 'update')->name('update');
-    Route::delete('/{customer}', 'destroy')->name('destroy');
-});
-
-Route::prefix('/api/orders')->as('orders.')->controller('OrderController')->group(function () {
-    Route::get('/', 'index')->name('index');
-    Route::get('/{order}', 'detail')->name('detail');
-    Route::get('/create', 'create')->name('create');
-    Route::post('/', 'store')->name('store');
-    Route::get('/{order}/edit', 'show')->name('show');
-    Route::put('/{order}', 'update')->name('update');
-    Route::delete('/{order}', 'destroy')->name('destroy');
-    Route::get('/fulfilled', 'fulfilled')->name('fulfilled');
-});
+Route::resource('/api/stores', StoresController::class)->only([
+    'index', 'show'
+]);
 
 // variants
 // order items
