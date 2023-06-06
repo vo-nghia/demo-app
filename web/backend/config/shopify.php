@@ -27,4 +27,18 @@ return [
         "interval" => EnsureBilling::INTERVAL_ONE_TIME,
     ],
 
+    'SHOPIFY_ACCESS_TOKEN' => env('SHOPIFY_ACCESS_TOKEN'),
+    'SHOPIFY_API_VERSION' => env('SHOPIFY_API_VERSION'),
+    'SHOPIFY_API_KEY' => env('SHOPIFY_API_KEY'),
+    'SHOPIFY_API_SECRET' => env('SHOPIFY_API_SECRET'),
+    'SHOPIFY_API_SCOPES' => implode(',', [
+        'write_products',
+        'write_orders',
+        'write_draft_orders',
+        'write_customers',
+    ]),
+    'SHOPIFY_APP_HOST' => env('SHOPIFY_APP_HOST'),
+    'SHOPIFY_SHOP' => env('SHOPIFY_SHOP'),
+    'SHOPIFY_COUNT_LIMIT' => 250,
+    'SHOPIFY_SHOP_URL' => sprintf('https://%s', env('SHOPIFY_SHOP')),
 ];

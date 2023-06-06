@@ -11,6 +11,7 @@
         "php": "~8.0.0 || ~8.1.0 || ~8.2.0",
         "ext-xml": "*",
         "ext-zip": "*",
+        "bensampo/laravel-enum": "^4.2",
         "doctrine/dbal": "^3.1",
         "fideloper/proxy": "^4.4",
         "fruitcake/laravel-cors": "^3.0",

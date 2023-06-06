@@ -32,10 +32,6 @@ use Shopify\Webhooks\Topics;
 | proxy rule for them in web/frontend/vite.config.js
 |
 */
-Route::get('/greeting', function () {
-    return 'Hello World';
-});
-
 Route::fallback(function (Request $request) {
     if (Context::$IS_EMBEDDED_APP &&  $request->query("embedded", false) === "1") {
         if (env('APP_ENV') === 'production') {
@@ -92,10 +88,8 @@ Route::get('/api/auth/callback', function (Request $request) {
 Route::get('/api/products/count', function (Request $request) {
     /** @var AuthSession */
     $session = $request->get('shopifySession'); // Provided by the shopify.auth middleware, guaranteed to be active
-
     $client = new Rest($session->getShop(), $session->getAccessToken());
-    $result = $client->get('products/count');
-
+    $result = $client->get('products');
     return response($result->getDecodedBody());
 })->middleware('shopify.auth');
 
@@ -146,3 +140,44 @@ Route::post('/api/webhooks', function (Request $request) {
         return response()->json(['message' => "Got an exception when handling '$topic' webhook"], 500);
     }
 });
+
+Route::prefix('/api/stores')->as('stores.')->controller('StoreController')->group(function () {
+    Route::get('/', 'index')->name('index');
+    Route::get('/{stores}', 'detail')->name('detail');
+    Route::get('/create', 'create')->name('create');
+    Route::post('/', 'store')->name('store');
+    Route::get('/{store}/edit', 'show')->name('show');
+    Route::put('/{store}', 'update')->name('update');
+    Route::delete('/{store}', 'destroy')->name('destroy');
+});
+
+Route::prefix('/api/products')->controller('ProductController')->group(function () {
+    Route::get('/', 'index')->name('index');
+    Route::post('/create', 'create')->name('create');
+    Route::post('/update', 'update')->name('update');
+    Route::post('/delete', 'delete')->name('delete');
+});
+
+Route::prefix('/api/customers')->as('customers.')->controller('CustomersController')->group(function () {
+    Route::get('/', 'index')->name('index');
+    Route::get('/{customer}', 'detail')->name('detail');
+    Route::get('/create', 'create')->name('create');
+    Route::post('/', 'store')->name('store');
+    Route::get('/{customer}/edit', 'show')->name('show');
+    Route::put('/{customer}', 'update')->name('update');
+    Route::delete('/{customer}', 'destroy')->name('destroy');
+});
+
+Route::prefix('/api/orders')->as('orders.')->controller('OrderController')->group(function () {
+    Route::get('/', 'index')->name('index');
+    Route::get('/{order}', 'detail')->name('detail');
+    Route::get('/create', 'create')->name('create');
+    Route::post('/', 'store')->name('store');
+    Route::get('/{order}/edit', 'show')->name('show');
+    Route::put('/{order}', 'update')->name('update');
+    Route::delete('/{order}', 'destroy')->name('destroy');
+    Route::get('/fulfilled', 'fulfilled')->name('fulfilled');
+});
+
+// variants
+// order items
