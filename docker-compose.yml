@@ -18,13 +18,14 @@ services:
     links:
     - db
   db:
+    container_name: app_db
     image: mysql:8
     ports:
       - 3308:3306
     volumes:
+      - ./.docker/mysql/custom.cnf:/etc/mysql/conf.d/custom.cnf
+      - ./.docker/mysql/charset.cnf:/etc/mysql/conf.d/charset.cnf
       - ./.db:/var/lib/mysql
     environment:
       - MYSQL_ROOT_PASSWORD=password
-      - MYSQL_USER=user
-      - MYSQL_PASSWORD=password
       - MYSQL_DATABASE=db
