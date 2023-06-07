@@ -19,5 +19,3 @@ COPY web/backend/nginx.conf /etc/nginx/nginx.conf
 RUN mv "$PHP_INI_DIR/php.ini-production" "$PHP_INI_DIR/php.ini"
 
 RUN cd frontend && npm install && npm run build
-
-ENTRYPOINT [ "/app/entrypoint.sh" ]
