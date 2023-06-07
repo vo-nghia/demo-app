@@ -18,6 +18,10 @@ use Shopify\Exception\InvalidWebhookException;
 use Shopify\Utils;
 use Shopify\Webhooks\Registry;
 use Shopify\Webhooks\Topics;
+use App\Http\Controllers\ProductsController;
+use App\Http\Controllers\OrdersController;
+use App\Http\Controllers\CustomersController;
+use App\Http\Controllers\StoresController;
 
 /*
 |--------------------------------------------------------------------------
@@ -32,10 +36,6 @@ use Shopify\Webhooks\Topics;
 | proxy rule for them in web/frontend/vite.config.js
 |
 */
-Route::get('/greeting', function () {
-    return 'Hello World';
-});
-
 Route::fallback(function (Request $request) {
     if (Context::$IS_EMBEDDED_APP &&  $request->query("embedded", false) === "1") {
         if (env('APP_ENV') === 'production') {
@@ -92,10 +92,8 @@ Route::get('/api/auth/callback', function (Request $request) {
 Route::get('/api/products/count', function (Request $request) {
     /** @var AuthSession */
     $session = $request->get('shopifySession'); // Provided by the shopify.auth middleware, guaranteed to be active
-
     $client = new Rest($session->getShop(), $session->getAccessToken());
     $result = $client->get('products/count');
-
     return response($result->getDecodedBody());
 })->middleware('shopify.auth');
 
@@ -146,3 +144,17 @@ Route::post('/api/webhooks', function (Request $request) {
         return response()->json(['message' => "Got an exception when handling '$topic' webhook"], 500);
     }
 });
+
+
+Route::resources([
+    '/api/products' => ProductsController::class,
+    '/api/orders' => OrdersController::class,
+    '/api/customers' => CustomersController::class,
+]);
+
+Route::resource('/api/stores', StoresController::class)->only([
+    'index', 'show'
+]);
+
+// variants
+// order items

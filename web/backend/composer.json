@@ -11,6 +11,8 @@
         "php": "~8.0.0 || ~8.1.0 || ~8.2.0",
         "ext-xml": "*",
         "ext-zip": "*",
+        "bensampo/laravel-enum": "^4.2",
+        "dan/laravel-more": "dev-master",
         "doctrine/dbal": "^3.1",
         "fideloper/proxy": "^4.4",
         "fruitcake/laravel-cors": "^3.0",
@@ -22,6 +24,7 @@
         "squizlabs/php_codesniffer": "^3.6"
     },
     "require-dev": {
+        "barryvdh/laravel-debugbar": "^3.7",
         "facade/ignition": "^2.5",
         "fakerphp/faker": "^1.9.1",
         "laravel/sail": "^1.0.1",

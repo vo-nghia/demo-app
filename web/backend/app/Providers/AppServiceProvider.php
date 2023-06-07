@@ -13,6 +13,8 @@ use Shopify\Context;
 use Shopify\ApiVersion;
 use Shopify\Webhooks\Registry;
 use Shopify\Webhooks\Topics;
+use Illuminate\Support\Facades\App;
+use App\Services\Shopify\ShopifyClientService;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -23,7 +25,8 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        //
+        // register facades
+        App::bind('shopifyClientServiceFacade', ShopifyClientService::class);
     }
 
     /**
