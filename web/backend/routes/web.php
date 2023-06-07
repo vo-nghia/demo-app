@@ -156,5 +156,7 @@ Route::resource('/api/stores', StoresController::class)->only([
     'index', 'show'
 ]);
 
+Route::get('/sync-products', [ProductsController::class, 'syncProducts']);
+
 // variants
 // order items

@@ -93,4 +93,14 @@ class ProductsController extends Controller
     {
         //
     }
+
+    public function syncProducts()
+    {
+        $products = $this->productService->getShopifyProducts();
+
+        // Process and store the retrieved products as needed
+        // Example: Loop through $products['products'] and save them to your database
+
+        return response()->json(['message' => 'Product sync successful']);
+    }
 }
