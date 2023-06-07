@@ -18,6 +18,10 @@ use Shopify\Exception\InvalidWebhookException;
 use Shopify\Utils;
 use Shopify\Webhooks\Registry;
 use Shopify\Webhooks\Topics;
+use App\Http\Controllers\ProductsController;
+use App\Http\Controllers\OrdersController;
+use App\Http\Controllers\CustomersController;
+use App\Http\Controllers\StoresController;
 
 /*
 |--------------------------------------------------------------------------
@@ -89,7 +93,7 @@ Route::get('/api/products/count', function (Request $request) {
     /** @var AuthSession */
     $session = $request->get('shopifySession'); // Provided by the shopify.auth middleware, guaranteed to be active
     $client = new Rest($session->getShop(), $session->getAccessToken());
-    $result = $client->get('products');
+    $result = $client->get('products/count');
     return response($result->getDecodedBody());
 })->middleware('shopify.auth');
 

@@ -3,9 +3,20 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Traits\ResponseTrait;
+use App\Services\ProductService;
 
 class ProductsController extends Controller
 {
+    use ResponseTrait;
+
+    private $productService;
+
+    public function __construct(ProductService $productService)
+    {
+        $this->productService = $productService;
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -13,7 +24,8 @@ class ProductsController extends Controller
      */
     public function index()
     {
-        //
+        $products = $this->productService->getShopifyProducts();
+        return $this->success(['data' => $products]);
     }
 
     /**

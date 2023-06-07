@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Services\Api;
+namespace App\Services;
 
 use Illuminate\Support\Facades\Session as FacadesSession;
 use Shopify\Auth\Session;

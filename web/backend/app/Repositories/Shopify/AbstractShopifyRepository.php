@@ -2,7 +2,7 @@
 
 namespace App\Repositories\Shopify;
 
-use App\Services\Api\SessionService;
+use App\Services\SessionService;
 use Shopify\Context;
 
 abstract class AbstractShopifyRepository
