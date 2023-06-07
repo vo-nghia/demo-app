@@ -32,6 +32,8 @@ class ProductCreator
                         "input" => [
                             "title" => self::randomTitle(),
                             "variants" => [["price" => self::randomPrice()]],
+                            "sku" => self::randomSku(),
+                            "inventory_quantity" => rand(1, 100)
                         ]
                     ]
                 ],
@@ -43,6 +45,12 @@ class ProductCreator
         }
     }
 
+    private static function random_strings($length)
+    {
+        $str_result = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
+        return substr(str_shuffle($str_result), 0, $length);
+    }
+
     private static function randomTitle()
     {
         $adjective = self::ADJECTIVES[mt_rand(0, count(self::ADJECTIVES) - 1)];
@@ -51,9 +59,13 @@ class ProductCreator
         return "$adjective $noun";
     }
 
+    private static function randomSku()
+    {
+        return self::random_strings(8);
+    }
+
     private static function randomPrice()
     {
-
         return (100.0 + mt_rand(0, 1000)) / 100;
     }
 

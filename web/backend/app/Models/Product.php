@@ -56,9 +56,6 @@ class Product extends Model
         'image' => 'array',
         'options' => 'array',
         'tags' => 'array',
-        'metafields' => 'array',
-//        'store_created_at' => 'datetime',
-//        'store_updated_at' => 'datetime',
     ];
 
     /**
@@ -66,7 +63,7 @@ class Product extends Model
      */
     public function orders()
     {
-        return $this->hasManyThrough(Order::class,OrderItem::class, 'product_id', 'id', 'id','order_id')
+        return $this->hasManyThrough(Order::class, OrderItem::class, 'product_id', 'id', 'id','order_id')
             ->distinct('orders.id');
     }
 
@@ -126,15 +123,4 @@ class Product extends Model
             })
             ->first();
     }
-
-    /**
-     * @param \Illuminate\Database\Eloquent\Builder|\App\Model $query
-     * @param string $template_suffix
-     * @return \Illuminate\Database\Eloquent\Builder
-     */
-    public function scopeForTemplateSuffix($query, $template_suffix)
-    {
-        return $query->where('template_suffix', $template_suffix);
-    }
-
 }

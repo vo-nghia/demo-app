@@ -15,10 +15,10 @@ export default function index() {
   const emptyToastProps = { content: null };
   const [isLoading, setIsLoading] = useState(true);
   const [toastProps, setToastProps] = useState(emptyToastProps);
-  const itemsPerPage = 5; // Number of items to show per page
+  const itemsPerPage = 15; // Number of items to show per page
   const [currentPage, setCurrentPage] = useState(1);
   const { t } = useTranslation();
-  const headings = ['Product', 'Variants'];
+  const headings = ['Product', '', 'Actions'];
 
   // Calculate the index range for the current page
   const startIndex = (currentPage - 1) * itemsPerPage;
@@ -45,6 +45,15 @@ export default function index() {
     <Toast {...toastProps} onDismiss={() => setToastProps(emptyToastProps)} />
   );
 
+  const handleEditProduct = (productId) => {
+    // Handle edit product logic here
+  };
+
+  const handleDeleteProduct = (productId) => {
+    // Handle delete product logic here
+  };
+
+
   const breadcrumbs = [{ content: "Home", url: "/" }];
   
   const rows = !isLoadingProduct && paginatedProducts.map((product) => {
@@ -56,18 +65,21 @@ export default function index() {
       variant.price,
       variant.sku,
       variant.inventory_quantity,
-      variant.compare_at_price,
     ]);
 
     return [
       product.title,
       <DataTable
         verticalAlign="middle"
-        columnContentTypes={['numeric', 'text', 'numeric', 'numeric', 'numeric', 'numeric']}
-        headings={['ID', 'Variant Title', 'Price', 'SKU Number', 'Net quantity', 'Net sales']}
+        columnContentTypes={['numeric', 'text', 'numeric', 'numeric', 'numeric']}
+        headings={['ID', 'Variant', 'Price', 'Sku', 'Quantity']}
         rows={variantRows}
         key={product.id}
       />,
+      <div>
+        <Button onClick={() => handleEditProduct(product.id)}>Edit</Button>
+        <Button destructive onClick={() => handleDeleteProduct(product.id)}>Delete</Button>
+      </div>,
     ];
   });
 
@@ -91,7 +103,7 @@ export default function index() {
         </Button>
         { !isLoadingProduct && 
           <>
-            <DataTable
+           <DataTable
               columnContentTypes={['text', 'text']}
               headings={headings}
               rows={rows}

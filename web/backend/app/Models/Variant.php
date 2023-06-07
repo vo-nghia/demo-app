@@ -60,10 +60,8 @@ class Variant extends Model
 
     /** @var array $casts */
     protected $casts = [
-        'api_cache' => 'array',
-        'metafields' => 'array',
-//        'store_created_at' => 'datetime',
-//        'store_updated_at' => 'datetime',
+       'store_created_at' => 'datetime',
+       'store_updated_at' => 'datetime',
     ];
 
     /** @var array $dates */
