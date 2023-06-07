@@ -1,135 +1,113 @@
+import { useState } from "react";
 import {
   Page,
-  LegacyCard,
   DataTable,
-  IndexTable,
-  useIndexResourceState,
-  Text,
-  Badge
+  Button,
+  TextStyle,
+  Pagination
 } from "@shopify/polaris";
-import { TitleBar } from "@shopify/app-bridge-react";
-import { useTranslation, Trans } from "react-i18next";
+import { TitleBar, Toast, useNavigate } from "@shopify/app-bridge-react";
+import { useTranslation } from "react-i18next";
+import { useAppQuery } from "../../hooks";
 
-export default function HomePage() {
+export default function index() {
+  const navigate = useNavigate();
+  const emptyToastProps = { content: null };
+  const [isLoading, setIsLoading] = useState(true);
+  const [toastProps, setToastProps] = useState(emptyToastProps);
+  const itemsPerPage = 5; // Number of items to show per page
+  const [currentPage, setCurrentPage] = useState(1);
   const { t } = useTranslation();
-  const rows = [
-    ['Emerald Silk Gown', '$875.00', 124689, 140, '$122,500.00'],
-    ['Mauve Cashmere Scarf', '$230.00', 124533, 83, '$19,090.00'],
-    [
-      'Navy Merino Wool Blazer with khaki chinos and yellow belt',
-      '$445.00',
-      124518,
-      32,
-      '$14,240.00',
-    ],
-  ];
+  const headings = ['Product', 'Variants'];
 
-  const orders = [
-    {
-      id: '1020',
-      order: '#1020',
-      date: 'Jul 20 at 4:34pm',
-      customer: 'Jaydon Stanton',
-      total: '$969.44',
-      paymentStatus: <Badge progress="complete">Paid</Badge>,
-      fulfillmentStatus: <Badge progress="incomplete">Unfulfilled</Badge>,
-    },
-    {
-      id: '1019',
-      order: '#1019',
-      date: 'Jul 20 at 3:46pm',
-      customer: 'Ruben Westerfelt',
-      total: '$701.19',
-      paymentStatus: <Badge progress="partiallyComplete">Partially paid</Badge>,
-      fulfillmentStatus: <Badge progress="incomplete">Unfulfilled</Badge>,
-    },
-    {
-      id: '1018',
-      order: '#1018',
-      date: 'Jul 20 at 3.44pm',
-      customer: 'Leo Carder',
-      total: '$798.24',
-      paymentStatus: <Badge progress="complete">Paid</Badge>,
-      fulfillmentStatus: <Badge progress="incomplete">Unfulfilled</Badge>,
-    },
-  ];
-  const resourceName = {
-    singular: 'order',
-    plural: 'orders',
-  };
+  // Calculate the index range for the current page
+  const startIndex = (currentPage - 1) * itemsPerPage;
+  const endIndex = startIndex + itemsPerPage;
 
-  const {selectedResources, allResourcesSelected, handleSelectionChange} =
-    useIndexResourceState(orders);
+  const {
+    data,
+    refetch: refetchProductProduct,
+    isLoading: isLoadingProduct,
+    isRefetching: isRefetchingProduct,
+  } = useAppQuery({
+    url: "/api/products",
+    reactQueryOptions: {
+      onSuccess: () => {
+        setIsLoading(false);
+      },
+    },
+  });
 
-  const rowMarkup = orders.map(
-    (
-      {id, order, date, customer, total, paymentStatus, fulfillmentStatus},
-      index,
-    ) => (
-      <IndexTable.Row
-        id={id}
-        key={id}
-        selected={selectedResources.includes(id)}
-        position={index}
-      >
-        <IndexTable.Cell>
-          <Text variant="bodyMd" fontWeight="bold" as="span">
-            {order}
-          </Text>
-        </IndexTable.Cell>
-        <IndexTable.Cell>{date}</IndexTable.Cell>
-        <IndexTable.Cell>{customer}</IndexTable.Cell>
-        <IndexTable.Cell>{total}</IndexTable.Cell>
-        <IndexTable.Cell>{paymentStatus}</IndexTable.Cell>
-        <IndexTable.Cell>{fulfillmentStatus}</IndexTable.Cell>
-      </IndexTable.Row>
-    ),
+  // Get the products to display on the current page
+  const paginatedProducts = !isLoadingProduct && data.data.slice(startIndex, endIndex);
+
+  const toastMarkup = toastProps.content && !isRefetchingCount && (
+    <Toast {...toastProps} onDismiss={() => setToastProps(emptyToastProps)} />
   );
 
+  const breadcrumbs = [{ content: "Home", url: "/" }];
+  
+  const rows = !isLoadingProduct && paginatedProducts.map((product) => {
+    const variantRows = product.variants.map((variant) => [
+      variant.id,
+      <TextStyle variation="subdued" key={`${variant.id}-title`}>
+        {variant.title}
+      </TextStyle>,
+      variant.price,
+      variant.sku,
+      variant.inventory_quantity,
+      variant.compare_at_price,
+    ]);
+
+    return [
+      product.title,
+      <DataTable
+        verticalAlign="middle"
+        columnContentTypes={['numeric', 'text', 'numeric', 'numeric', 'numeric', 'numeric']}
+        headings={['ID', 'Variant Title', 'Price', 'SKU Number', 'Net quantity', 'Net sales']}
+        rows={variantRows}
+        key={product.id}
+      />,
+    ];
+  });
+
+  const handlePageChange = (newPage) => {
+    setCurrentPage(newPage);
+  };
+
   return (
-    <Page title="Sales by product">
-      <LegacyCard>
-        <DataTable
-          columnContentTypes={[
-            'text',
-            'numeric',
-            'numeric',
-            'numeric',
-            'numeric',
-          ]}
-          headings={[
-            'Product',
-            'Price',
-            'SKU Number',
-            'Net quantity',
-            'Net sales',
-          ]}
-          rows={rows}
-          totals={['', '', '', 255, '$155,830.00']}
+    <>
+      {toastMarkup}
+      <Page title="Products List">
+        <TitleBar
+          title="Products"
+          breadcrumbs={breadcrumbs}
+          primaryAction={null}
         />
-      </LegacyCard>
-
-
-      <LegacyCard>
-      <IndexTable
-        resourceName={resourceName}
-        itemCount={orders.length}
-        selectedItemsCount={
-          allResourcesSelected ? 'All' : selectedResources.length
+        <Button primary onClick={() => {
+          navigate('/products/add');
+        }}>
+          Create New Product
+        </Button>
+        { !isLoadingProduct && 
+          <>
+            <DataTable
+              columnContentTypes={['text', 'text']}
+              headings={headings}
+              rows={rows}
+            />
+            <div style={{ marginTop: '1rem', display: 'flex', justifyContent: 'center' }}>
+              <Pagination
+                label={`${startIndex + 1}-${Math.min(endIndex, data.data.length)} of ${data.data.length}`}
+                hasPrevious={currentPage > 1}
+                hasNext={endIndex < data.data.length}
+                onPrevious={() => handlePageChange(currentPage - 1)}
+                onNext={() => handlePageChange(currentPage + 1)}
+              />
+            </div>
+          </>
         }
-        onSelectionChange={handleSelectionChange}
-        headings={[
-          {title: 'Order'},
-          {title: 'Date'},
-          {title: 'Customer'},
-          {title: 'Total', alignment: 'end'},
-          {title: 'Payment status'},
-          {title: 'Fulfillment status'},
-        ]}
-      >
-        {rowMarkup}
-      </IndexTable>
-    </LegacyCard>
-    </Page>
+      </Page>
+    </>
   );
 }

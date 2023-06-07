@@ -22,8 +22,16 @@ export default function App() {
             <NavigationMenu
               navigationLinks={[
                 {
-                  label: t("NavigationMenu.product"),
+                  label: t("NavigationMenu.products"),
                   destination: "/products",
+                },
+                {
+                  label: t("NavigationMenu.orders"),
+                  destination: "/orders",
+                },
+                {
+                  label: t("NavigationMenu.customers"),
+                  destination: "/orders",
                 }
               ]}
             />
