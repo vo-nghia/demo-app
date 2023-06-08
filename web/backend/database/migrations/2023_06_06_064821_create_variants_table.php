@@ -18,8 +18,10 @@ class CreateVariantsTable extends Migration
         }
 
         Schema::create('variants', function (Blueprint $table) {
-            $table->increments('id');
+            $table->bigIncrements('id');
             $table->unsignedInteger('product_id');
+            $table->unsignedBigInteger('store_variant_id');
+            $table->unsignedBigInteger('store_product_id');
             $table->string('title', 255)->nullable();
             $table->decimal('price', 8, 2)->default(0.00);
             $table->string('sku', 255)->nullable();
@@ -37,6 +39,7 @@ class CreateVariantsTable extends Migration
 
             $table->tinyInteger('taxable')->default(1);
             $table->string('barcode', 255)->nullable();
+            $table->string('fulfillment_service', 255)->nullable();
             $table->integer('grams')->default(0);
             $table->unsignedBigInteger('store_image_id')->nullable();
             $table->string('weight', 255)->nullable();
@@ -46,9 +49,6 @@ class CreateVariantsTable extends Migration
             $table->integer('old_inventory_quantity')->nullable();
             $table->boolean('requires_shipping')->nullable();
             $table->string('admin_graphql_api_id', 64)->nullable();
-
-            $table->unsignedBigInteger('store_variant_id');
-            $table->unsignedBigInteger('store_product_id');
 
             $table->timestamp('synced_at')->nullable();
             $table->nullableTimestamps();

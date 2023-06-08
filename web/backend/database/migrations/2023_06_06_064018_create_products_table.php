@@ -18,7 +18,8 @@ class CreateProductsTable extends Migration
         }
 
         Schema::create('products', function (Blueprint $table) {
-            $table->increments('id');
+            $table->bigIncrements('id');
+            $table->bigInteger('store_product_id');
             $table->string('title', 255)->nullable();
             $table->text('body_html')->nullable();
             $table->string('vendor', 128)->nullable();

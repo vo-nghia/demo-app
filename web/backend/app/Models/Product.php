@@ -1,16 +1,12 @@
 <?php
 
-namespace Dan\Shopify\Laravel\Models;
+namespace App\Models;
 
-use Dan\Shopify\Laravel\Traits\BelongsToStore;
-use Dan\Shopify\Models\Product as ShopifyProduct;
 use DB;
-use Exception;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use More\Laravel\Model;
-use More\Laravel\Traits\Model\BelongsToUser;
 
 /**
  * Class Product
@@ -31,7 +27,7 @@ use More\Laravel\Traits\Model\BelongsToUser;
  */
 class Product extends Model
 {
-    use BelongsToUser, BelongsToStore, SoftDeletes; //Taggable;
+    use SoftDeletes; //Taggable;
 
     /** @var string $table */
     protected $table = 'products';

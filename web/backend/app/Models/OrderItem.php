@@ -1,11 +1,11 @@
 <?php
 
-namespace Dan\Shopify\Laravel\Models;
+namespace App\Models;
 
+use More\Laravel\Model;
 use Dan\Shopify\Laravel\Support\Util;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use More\Laravel\Model;
 use Dan\Shopify\Models\Order as ShopifyOrder;
 
 /**

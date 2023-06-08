@@ -1,13 +1,13 @@
 <?php
 
-namespace Dan\Shopify\Laravel\Models;
+namespace App\Models;
 
 use Carbon\Carbon;
-use Dan\Shopify\Laravel\Traits\BelongsToStore;
+use More\Laravel\Model;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use More\Laravel\Model;
+use Dan\Shopify\Laravel\Traits\BelongsToStore;
 use More\Laravel\Traits\Model\User\AbbreviatesNames;
 
 /**

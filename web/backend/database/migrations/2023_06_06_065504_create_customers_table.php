@@ -18,7 +18,7 @@ class CreateCustomersTable extends Migration
         }
 
         Schema::create('customers', function (Blueprint $table) {
-            $table->increments('id');
+            $table->bigIncrements('id');
 
             $table->string('store_type')->default(addslashes(\Dan\Shopify\Laravel\Models\Store::class));
             $table->unsignedInteger('store_id')->nullable();

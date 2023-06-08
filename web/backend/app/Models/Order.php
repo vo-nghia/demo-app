@@ -1,16 +1,13 @@
 <?php
 
-namespace Dan\Shopify\Laravel\Models;
+namespace App\Models;
 
 use Carbon\Carbon;
-use Dan\Shopify\Laravel\Traits\BelongsToStore;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
-use Illuminate\Database\Eloquent\Model as BaseModel;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use Illuminate\Notifications\Notifiable;
-use More\Laravel\Model;
-use More\Laravel\Traits\Model\BelongsToUser;
 
 /**
  * Class Order
@@ -41,10 +38,7 @@ use More\Laravel\Traits\Model\BelongsToUser;
  */
 class Order extends Model
 {
-    use BelongsToUser,
-        BelongsToStore,
-        Notifiable,
-        SoftDeletes;
+    use Notifiable, SoftDeletes;
 
     /** @var string $table*/
     protected $table = 'orders';

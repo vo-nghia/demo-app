@@ -1,18 +1,14 @@
 <?php
 
-use App\Exceptions\ShopifyProductCreatorException;
 use App\Lib\AuthRedirection;
 use App\Lib\EnsureBilling;
-use App\Lib\ProductCreator;
 use App\Models\Session;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Route;
 use Shopify\Auth\OAuth;
-use Shopify\Auth\Session as AuthSession;
 use Shopify\Clients\HttpHeaders;
-use Shopify\Clients\Rest;
 use Shopify\Context;
 use Shopify\Exception\InvalidWebhookException;
 use Shopify\Utils;
@@ -89,44 +85,6 @@ Route::get('/api/auth/callback', function (Request $request) {
     return redirect($redirectUrl);
 });
 
-Route::get('/api/products/count', function (Request $request) {
-    /** @var AuthSession */
-    $session = $request->get('shopifySession'); // Provided by the shopify.auth middleware, guaranteed to be active
-    $client = new Rest($session->getShop(), $session->getAccessToken());
-    $result = $client->get('products/count');
-    return response($result->getDecodedBody());
-})->middleware('shopify.auth');
-
-Route::get('/api/products/create', function (Request $request) {
-    /** @var AuthSession */
-    $session = $request->get('shopifySession'); // Provided by the shopify.auth middleware, guaranteed to be active
-
-    $success = $code = $error = null;
-    try {
-        ProductCreator::call($session, 5);
-        $success = true;
-        $code = 200;
-        $error = null;
-    } catch (\Exception $e) {
-        $success = false;
-
-        if ($e instanceof ShopifyProductCreatorException) {
-            $code = $e->response->getStatusCode();
-            $error = $e->response->getDecodedBody();
-            if (array_key_exists("errors", $error)) {
-                $error = $error["errors"];
-            }
-        } else {
-            $code = 500;
-            $error = $e->getMessage();
-        }
-
-        Log::error("Failed to create products: $error");
-    } finally {
-        return response()->json(["success" => $success, "error" => $error], $code);
-    }
-})->middleware('shopify.auth');
-
 Route::post('/api/webhooks', function (Request $request) {
     try {
         $topic = $request->header(HttpHeaders::X_SHOPIFY_TOPIC, '');
@@ -145,16 +103,32 @@ Route::post('/api/webhooks', function (Request $request) {
     }
 });
 
+Route::prefix('/api/products')->group(function () {
+    Route::get('/', [ProductsController::class, 'index']);
+    Route::get('/{id}', [ProductsController::class, 'show']);
+    Route::get('/count', [ProductsController::class, 'count']);
+    Route::post('/create', [ProductsController::class, 'store']);
+    Route::get('/sync', [ProductsController::class, 'sync']);
+    Route::delete('/{id}', [ProductsController::class, 'destroy']);
+});
 
-Route::resources([
-    '/api/products' => ProductsController::class,
-    '/api/orders' => OrdersController::class,
-    '/api/customers' => CustomersController::class,
-]);
+Route::prefix('/api/stores')->group(function () {
+    Route::get('/', [StoresController::class]);
+});
 
-Route::resource('/api/stores', StoresController::class)->only([
-    'index', 'show'
-]);
+Route::prefix('/api/orders')->group(function () {
+    Route::get('/', [OrdersController::class]);
+});
+
+Route::prefix('/api/customers')->group(function () {
+    Route::get('/', [CustomersController::class]);
+});
+
+Route::get('/api/token', function () {
+    return response()->json([
+        'token' => csrf_token(),
+    ]);
+});
 
 // variants
 // order items

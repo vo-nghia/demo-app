@@ -3,19 +3,20 @@ import {
   Page,
   DataTable,
   Button,
-  TextStyle,
-  Pagination
+  Text,
+  Pagination,
+  Layout
 } from "@shopify/polaris";
 import { TitleBar, Toast, useNavigate } from "@shopify/app-bridge-react";
 import { useTranslation } from "react-i18next";
 import { useAppQuery } from "../../hooks";
 
-export default function index() {
+export default function Index() {
   const navigate = useNavigate();
   const emptyToastProps = { content: null };
   const [isLoading, setIsLoading] = useState(true);
   const [toastProps, setToastProps] = useState(emptyToastProps);
-  const itemsPerPage = 15; // Number of items to show per page
+  const itemsPerPage = 10; // Number of items to show per page
   const [currentPage, setCurrentPage] = useState(1);
   const { t } = useTranslation();
   const headings = ['Product', '', 'Actions'];
@@ -26,7 +27,7 @@ export default function index() {
 
   const {
     data,
-    refetch: refetchProductProduct,
+    refetch: refetchtProduct,
     isLoading: isLoadingProduct,
     isRefetching: isRefetchingProduct,
   } = useAppQuery({
@@ -41,7 +42,7 @@ export default function index() {
   // Get the products to display on the current page
   const paginatedProducts = !isLoadingProduct && data.data.slice(startIndex, endIndex);
 
-  const toastMarkup = toastProps.content && !isRefetchingCount && (
+  const toastMarkup = toastProps.content && !isRefetchingProduct && (
     <Toast {...toastProps} onDismiss={() => setToastProps(emptyToastProps)} />
   );
 
@@ -49,8 +50,24 @@ export default function index() {
     // Handle edit product logic here
   };
 
-  const handleDeleteProduct = (productId) => {
-    // Handle delete product logic here
+  const handleDeleteProduct = async (productId) => {
+    setIsLoading(true);
+    const response = await fetch(`/api/products/${productId}`, {
+      method: 'DELETE'
+    });
+
+    if (response.ok) {
+      await refetchtProduct();
+      setToastProps({
+        content: t("Product.productsDeletedToast"),
+      });
+    } else {
+      setIsLoading(false);
+      setToastProps({
+        content: t("Product.errorDeletedProductsToast"),
+        error: true,
+      });
+    }
   };
 
 
@@ -59,9 +76,9 @@ export default function index() {
   const rows = !isLoadingProduct && paginatedProducts.map((product) => {
     const variantRows = product.variants.map((variant) => [
       variant.id,
-      <TextStyle variation="subdued" key={`${variant.id}-title`}>
+      <Text  variation="subdued" key={`${variant.id}-title`}>
         {variant.title}
-      </TextStyle>,
+      </Text >,
       variant.price,
       variant.sku,
       variant.inventory_quantity,
@@ -77,7 +94,7 @@ export default function index() {
         key={product.id}
       />,
       <div>
-        <Button onClick={() => handleEditProduct(product.id)}>Edit</Button>
+        <Button onClick={() => {navigate(`/products/edit/${product.id}`);}}>Edit</Button>
         <Button destructive onClick={() => handleDeleteProduct(product.id)}>Delete</Button>
       </div>,
     ];
@@ -90,35 +107,47 @@ export default function index() {
   return (
     <>
       {toastMarkup}
-      <Page title="Products List">
-        <TitleBar
-          title="Products"
-          breadcrumbs={breadcrumbs}
-          primaryAction={null}
-        />
-        <Button primary onClick={() => {
-          navigate('/products/add');
-        }}>
-          Create New Product
-        </Button>
-        { !isLoadingProduct && 
-          <>
-           <DataTable
-              columnContentTypes={['text', 'text']}
-              headings={headings}
-              rows={rows}
-            />
-            <div style={{ marginTop: '1rem', display: 'flex', justifyContent: 'center' }}>
-              <Pagination
-                label={`${startIndex + 1}-${Math.min(endIndex, data.data.length)} of ${data.data.length}`}
-                hasPrevious={currentPage > 1}
-                hasNext={endIndex < data.data.length}
-                onPrevious={() => handlePageChange(currentPage - 1)}
-                onNext={() => handlePageChange(currentPage + 1)}
+      <Page title="Products List" fullWidth>
+        <Layout>
+            <Layout.Section>
+              <TitleBar
+                title="Products"
+                breadcrumbs={breadcrumbs}
+                primaryAction={null}
               />
-            </div>
-          </>
-        }
+            </Layout.Section>
+            <Layout.Section>
+              <Button primary onClick={() => {
+                navigate('/products/add');
+              }}>
+                Create New Product
+              </Button>
+            </Layout.Section>
+            <Layout.Section>
+              { !isLoadingProduct && data.data.length != 0 ?
+                <>
+                  <DataTable
+                    columnContentTypes={['text', 'text']}
+                    headings={headings}
+                    rows={rows}
+                  />
+                  <div style={{ marginTop: '1rem', display: 'flex', justifyContent: 'center', marginBottom: '3rem' }}>
+                    <Pagination
+                      label={`${startIndex + 1}-${Math.min(endIndex, data.data.length)} of ${data.data.length}`}
+                      hasPrevious={currentPage > 1}
+                      hasNext={endIndex < data.data.length}
+                      onPrevious={() => handlePageChange(currentPage - 1)}
+                      onNext={() => handlePageChange(currentPage + 1)}
+                    />
+                  </div>
+                </>
+                :
+                <Text alignment="center">
+                  No data available in table
+                </Text>
+              }
+            </Layout.Section>
+        </Layout>
       </Page>
     </>
   );

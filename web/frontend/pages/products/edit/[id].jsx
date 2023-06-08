@@ -1,4 +1,3 @@
-import { useState, useCallback } from "react";
 import {
   Page,
   TextField,
@@ -10,74 +9,23 @@ import {
 } from "@shopify/polaris";
 import { TitleBar, useNavigate } from "@shopify/app-bridge-react";
 import { useTranslation } from "react-i18next";
-import { useAuthenticatedFetch } from "../../hooks";
+import { useAuthenticatedFetch, useAppQuery } from "../../../hooks";
 import { Toast } from "@shopify/app-bridge-react";
+import { useParams } from "react-router-dom";
+import { useState, useCallback, useEffect } from "react";
 
-export default function Add() {
+export default function Edit() {
+  const { t } = useTranslation();
+  const { id } = useParams();
   const navigate = useNavigate();
   const emptyToastProps = { content: null };
   const [isLoading, setIsLoading] = useState(true);
-  const { t } = useTranslation();
   const [title, setTitle] = useState('');
   const [describody_html, setDescribodyHtml] = useState('');
   const [vendor, setVendor] = useState('');
   const [product_type, setProductType] = useState('');
   const [status, setStatus] = useState('');
-  const fetch = useAuthenticatedFetch();
   const [toastProps, setToastProps] = useState(emptyToastProps);
-
-  const handleSubmit = async () => {
-    setIsLoading(true);
-
-    fetch('/api/token')
-      .then(response => response.json())
-      .then(data => {
-        const headers = {
-          'Content-Type': 'application/json',
-          'X-CSRF-TOKEN': data.token
-        };
-
-        fetch('/api/products/create', {
-          method: 'POST',
-          headers: headers,
-          body: JSON.stringify({
-            title: title,
-            describody_html: describody_html,
-            vendor: vendor,
-            product_type: product_type,
-            status: status
-          })
-        })
-          .then(response => {
-            setToastProps({
-              content: t("Product.created"),
-            });
-            setTitle('');
-            setDescribodyHtml('');
-            setVendor('');
-            setProductType('');
-            setStatus('');
-          })
-          .catch(error => {
-            setIsLoading(false);
-            setToastProps({
-              content: error,
-              error: true,
-            });
-          });
-      })
-      .catch(error => {
-        setIsLoading(false);
-        setToastProps({
-          content: error,
-          error: true,
-        });
-      });
-  };
-
-  const toastMarkup = toastProps.content && (
-    <Toast {...toastProps} onDismiss={() => setToastProps(emptyToastProps)} />
-  );
 
   const handleTitleChange = useCallback((value) => setTitle(value), []);
   const handleDescribodyHtmlChange = useCallback((value) => setDescribodyHtml(value), []);
@@ -85,13 +33,39 @@ export default function Add() {
   const handleProductTypeChange = useCallback((value) => setProductType(value), []);
   const handleStatusChange = useCallback((value) => setStatus(value), []);
 
+  const toastMarkup = toastProps.content && (
+    <Toast {...toastProps} onDismiss={() => setToastProps(emptyToastProps)} />
+  );
+
+  const {
+    data,
+    refetch: refetchSingleProduct,
+    isLoading: isLoadingSingleProduct,
+    isRefetching: isRefetchingSingleProduct,
+  } = useAppQuery({
+    url: `/api/products/${id}`,
+    reactQueryOptions: {
+      onSuccess: () => {
+        setIsLoading(false);
+      },
+    },
+  });
+
+  // initial product data
+
+  const handleEdit = async () => {
+    setIsLoading(true);
+
+    // update new data to shopify and database
+  };
+
   return (
     <>
       {toastMarkup}
       <Page narrowWidth>
-        <TitleBar title={t("Product.add")} primaryAction={null} />
+        <TitleBar title={t("Product.edit")} primaryAction={null} />
         <Layout.Section>
-          <Form onSubmit={handleSubmit} method="post">
+          <Form onSubmit={handleEdit} method="post">
             <FormLayout>
               <TextField
                 label="Title"
@@ -129,7 +103,7 @@ export default function Add() {
               />
 
               <ButtonGroup>
-                <Button submit primary>Register</Button>
+                <Button submit primary>Edit</Button>
                 <Button onClick={() => {navigate('/products');}}>Back to list</Button>
               </ButtonGroup>
             </FormLayout>

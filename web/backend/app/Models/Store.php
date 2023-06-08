@@ -1,19 +1,19 @@
 <?php
 
-namespace Dan\Shopify\Laravel\Models;
+namespace App\Models;
 
-use Carbon\Carbon;
 use Crypt;
-use Dan\Shopify\HasShopifyClientInterface;
-use Dan\Shopify\Shopify;
+use Carbon\Carbon;
 use Dan\Shopify\Util;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\SoftDeletes;
-use Illuminate\Http\Request;
-use Illuminate\Notifications\Notifiable;
 use More\Laravel\Model;
+use Dan\Shopify\Shopify;
+use Illuminate\Http\Request;
 use More\Laravel\Traits\HasLocales;
+use Illuminate\Notifications\Notifiable;
+use Illuminate\Database\Eloquent\Builder;
+use Dan\Shopify\HasShopifyClientInterface;
 use More\Laravel\Traits\Model\BelongsToUser;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 /**
  * Class Store
