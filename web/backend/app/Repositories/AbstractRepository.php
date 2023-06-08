@@ -2,8 +2,8 @@
 
 namespace App\Repositories;
 
-use EloquentFilter\Filterable;
 use Exception;
+use EloquentFilter\Filterable;
 use Illuminate\Pagination\LengthAwarePaginator;
 
 abstract class AbstractRepository

@@ -18,8 +18,7 @@ class CreateOrdersTable extends Migration
         }
 
         Schema::create('orders', function (Blueprint $table) {
-            $table->increments('id');
-
+            $table->bigIncrements('id');
             $table->unsignedInteger('customer_id');
 
             $table->string('store_type')->default(addslashes(config('shopify.stores.model')));

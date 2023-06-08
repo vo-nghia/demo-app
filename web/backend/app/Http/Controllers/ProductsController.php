@@ -24,8 +24,19 @@ class ProductsController extends Controller
      */
     public function index()
     {
-        $products = $this->productService->getShopifyProducts();
+        $products = $this->productService->getList();
         return $this->success(['data' => $products]);
+    }
+
+    /**
+     * Count products
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function count()
+    {
+        $count = $this->productService->getShopifyProductsCount();
+        return $this->success(['count' => $count]);
     }
 
     /**
@@ -33,9 +44,9 @@ class ProductsController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create(Request $request)
     {
-        //
+       dd($request);
     }
 
     /**
@@ -46,7 +57,10 @@ class ProductsController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        // Validate the request data
+        $validatedData = $request->validate(['title' => 'required|string']);
+        $this->productService->create($validatedData);
+        return $this->success(['message' => 'Createw new product successful']);
     }
 
     /**
@@ -57,7 +71,8 @@ class ProductsController extends Controller
      */
     public function show($id)
     {
-        //
+        $product = $this->productService->get($id);
+        return $this->success(['data' => $product]);
     }
 
     /**
@@ -91,16 +106,13 @@ class ProductsController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $this->productService->deleteShopifyProducts($id);
+        return response()->json(['message' => 'Delete Product successful']);
     }
 
-    public function syncProducts()
+    public function sync()
     {
-        $products = $this->productService->getShopifyProducts();
-
-        // Process and store the retrieved products as needed
-        // Example: Loop through $products['products'] and save them to your database
-
+        $this->productService->syncShopifyProducts();
         return response()->json(['message' => 'Product sync successful']);
     }
 }

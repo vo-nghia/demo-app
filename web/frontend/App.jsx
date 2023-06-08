@@ -22,6 +22,10 @@ export default function App() {
             <NavigationMenu
               navigationLinks={[
                 {
+                  label: t("NavigationMenu.syncProducts"),
+                  destination: "/products/sync",
+                },
+                {
                   label: t("NavigationMenu.products"),
                   destination: "/products",
                 },
