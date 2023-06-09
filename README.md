@@ -1,5 +1,17 @@
 # Shopify Demo App
 
+## Requirement
+```
+https://app.asana.com/0/1204731228383086/1204731228383096
+```
+
+
+### Structure
+```bash
+Backend: ./web/backend
+Frontend: ./web/frontend
+```
+
 ## Setup
 ### Setup project
 
@@ -11,7 +23,7 @@ cd demo-app
 ### Initial server nginx and mysql
 
 ```bash
-export docker-compose build
+docker-compose build
 docker-compose up -d
 ```
 
