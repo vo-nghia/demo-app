@@ -27,6 +27,14 @@ class ShopifyProductRepository extends AbstractShopifyRepository
         );
     }
 
+    public function update($productId, $productData)
+    {
+        return ShopifyClientFacade::put(
+            sprintf('%s/%s', self::RESOURCE_PREFIX, $productId),
+            [self::RESOURCE_KEY => $productData]
+        );
+    }
+
     public function getShopifyProductsCount()
     {
         return ShopifyClientFacade::get(sprintf('%s/count', self::RESOURCE_PREFIX), []);

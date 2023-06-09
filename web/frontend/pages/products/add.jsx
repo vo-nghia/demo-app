@@ -22,7 +22,7 @@ export default function Add() {
   const [describody_html, setDescribodyHtml] = useState('');
   const [vendor, setVendor] = useState('');
   const [product_type, setProductType] = useState('');
-  const [status, setStatus] = useState('');
+  const [tags, setTags] = useState('');
   const fetch = useAuthenticatedFetch();
   const [toastProps, setToastProps] = useState(emptyToastProps);
 
@@ -42,10 +42,10 @@ export default function Add() {
           headers: headers,
           body: JSON.stringify({
             title: title,
-            describody_html: describody_html,
+            body_html: describody_html,
             vendor: vendor,
             product_type: product_type,
-            status: status
+            tags: tags,
           })
         })
           .then(response => {
@@ -56,7 +56,7 @@ export default function Add() {
             setDescribodyHtml('');
             setVendor('');
             setProductType('');
-            setStatus('');
+            setTags('');
           })
           .catch(error => {
             setIsLoading(false);
@@ -83,7 +83,7 @@ export default function Add() {
   const handleDescribodyHtmlChange = useCallback((value) => setDescribodyHtml(value), []);
   const handleVendorChange = useCallback((value) => setVendor(value), []);
   const handleProductTypeChange = useCallback((value) => setProductType(value), []);
-  const handleStatusChange = useCallback((value) => setStatus(value), []);
+  const handleTagsChange = useCallback((value) => setTags(value), []);
 
   return (
     <>
@@ -122,10 +122,10 @@ export default function Add() {
               />
 
               <TextField
-                label="status"
+                label="Tags"
                 type="text"
-                value={status}
-                onChange={handleStatusChange}
+                value={tags}
+                onChange={handleTagsChange}
               />
 
               <ButtonGroup>

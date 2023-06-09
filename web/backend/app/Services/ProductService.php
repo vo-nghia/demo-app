@@ -47,6 +47,16 @@ class ProductService
         return $this->storeNewProduct($newProduct['product']);
     }
 
+    public function update($productId, $productData)
+    {
+        $product = $this->productRepo->find($productId);
+        if (!$product) {
+            return;
+        }
+        $productDetail = $this->shopifyProductRepo->update($product['store_product_id'], $productData);
+        return $this->updateProduct($productId, $productDetail['product']);
+    }
+
     public function get($productData)
     {
        return $this->productRepo->find($productData);
@@ -55,6 +65,13 @@ class ProductService
     private function storeNewProduct($newProductData)
     {
         return $this->productRepo->saveToDB($newProductData);
+    }
+
+    private function updateProduct($productId, $productDetail)
+    {
+        unset($productDetail['id']);
+        unset($productDetail['variants']);
+        return $this->productRepo->update(['id' => $productId], $productDetail);
     }
 
     public function deleteShopifyProducts($productId)

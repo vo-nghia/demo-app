@@ -105,10 +105,11 @@ Route::post('/api/webhooks', function (Request $request) {
 
 Route::prefix('/api/products')->group(function () {
     Route::get('/', [ProductsController::class, 'index']);
-    Route::get('/{id}', [ProductsController::class, 'show']);
     Route::get('/count', [ProductsController::class, 'count']);
     Route::post('/create', [ProductsController::class, 'store']);
     Route::get('/sync', [ProductsController::class, 'sync']);
+    Route::get('/{id}', [ProductsController::class, 'show']);
+    Route::put('/{id}', [ProductsController::class, 'update']);
     Route::delete('/{id}', [ProductsController::class, 'destroy']);
 });
 

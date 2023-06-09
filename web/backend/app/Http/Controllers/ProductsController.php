@@ -58,7 +58,13 @@ class ProductsController extends Controller
     public function store(Request $request)
     {
         // Validate the request data
-        $validatedData = $request->validate(['title' => 'required|string']);
+        $validatedData = $request->validate([
+            'title' => 'required|string',
+            'body_html' => 'string',
+            'product_type' => 'string',
+            'vendor' => 'string',
+            'tags' => 'string'
+        ]);
         $this->productService->create($validatedData);
         return $this->success(['message' => 'Createw new product successful']);
     }
@@ -95,7 +101,15 @@ class ProductsController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $validatedData = $request->validate([
+            'title' => 'required|string',
+            'body_html' => 'string',
+            'product_type' => 'string',
+            'vendor' => 'string',
+            'tags' => 'string'
+        ]);
+        $product = $this->productService->update($id, $validatedData);
+        return $this->success(['data' => $product]);
     }
 
     /**

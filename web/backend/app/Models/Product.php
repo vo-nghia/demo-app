@@ -50,8 +50,7 @@ class Product extends Model
     protected $casts = [
         'images' => 'array',
         'image' => 'array',
-        'options' => 'array',
-        'tags' => 'array',
+        'options' => 'array'
     ];
 
     /**

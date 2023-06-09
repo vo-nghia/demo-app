@@ -24,39 +24,84 @@ export default function Edit() {
   const [describody_html, setDescribodyHtml] = useState('');
   const [vendor, setVendor] = useState('');
   const [product_type, setProductType] = useState('');
-  const [status, setStatus] = useState('');
+  const [tags, setTags] = useState('');
   const [toastProps, setToastProps] = useState(emptyToastProps);
 
   const handleTitleChange = useCallback((value) => setTitle(value), []);
   const handleDescribodyHtmlChange = useCallback((value) => setDescribodyHtml(value), []);
   const handleVendorChange = useCallback((value) => setVendor(value), []);
   const handleProductTypeChange = useCallback((value) => setProductType(value), []);
-  const handleStatusChange = useCallback((value) => setStatus(value), []);
+  const handleTagsChange = useCallback((value) => setTags(value), []);
 
   const toastMarkup = toastProps.content && (
     <Toast {...toastProps} onDismiss={() => setToastProps(emptyToastProps)} />
   );
 
-  const {
-    data,
-    refetch: refetchSingleProduct,
-    isLoading: isLoadingSingleProduct,
-    isRefetching: isRefetchingSingleProduct,
-  } = useAppQuery({
-    url: `/api/products/${id}`,
-    reactQueryOptions: {
-      onSuccess: () => {
-        setIsLoading(false);
-      },
-    },
-  });
-
   // initial product data
+  useEffect(() => {
+    setIsLoading(true);
+    fetchData();
+  }, []);
+
+  const fetchData = async () => {
+    try {
+      const response = await fetch(`/api/products/${id}`);
+      const jsonData = await response.json();
+      const productDetail = jsonData.data;
+      setTitle(productDetail.title);
+      setDescribodyHtml(productDetail.body_html);
+      setVendor(productDetail.vendor);
+      setProductType(productDetail.product_type);
+      setTags(productDetail.tags);
+    } catch (e) {
+      console.log(e);
+    }
+
+    setIsLoading(false);
+  };
 
   const handleEdit = async () => {
     setIsLoading(true);
 
-    // update new data to shopify and database
+    fetch('/api/token')
+      .then(response => response.json())
+      .then(data => {
+        const headers = {
+          'Content-Type': 'application/json',
+          'X-CSRF-TOKEN': data.token
+        };
+
+        fetch(`/api/products/${id}`, {
+          method: 'PUT',
+          headers: headers,
+          body: JSON.stringify({
+            title: title,
+            body_html: describody_html,
+            vendor: vendor,
+            product_type: product_type,
+            tags: tags
+          })
+        })
+          .then(response => {
+            setToastProps({
+              content: t("Product.edited"),
+            });
+          })
+          .catch(error => {
+            setIsLoading(false);
+            setToastProps({
+              content: error,
+              error: true,
+            });
+          });
+      })
+      .catch(error => {
+        setIsLoading(false);
+        setToastProps({
+          content: error,
+          error: true,
+        });
+      });
   };
 
   return (
@@ -82,24 +127,24 @@ export default function Edit() {
               />
 
               <TextField
-                label="vendor"
+                label="Vendor"
                 type="text"
                 value={vendor}
                 onChange={handleVendorChange}
               />
 
               <TextField
-                label="product_type"
+                label="Product Type"
                 type="text"
                 value={product_type}
                 onChange={handleProductTypeChange}
               />
 
               <TextField
-                label="status"
+                label="Tags"
                 type="text"
-                value={status}
-                onChange={handleStatusChange}
+                value={tags}
+                onChange={handleTagsChange}
               />
 
               <ButtonGroup>

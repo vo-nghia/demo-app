@@ -23,6 +23,7 @@ class CreateProductsTable extends Migration
             $table->string('title', 255)->nullable();
             $table->text('body_html')->nullable();
             $table->string('vendor', 128)->nullable();
+            $table->string('status', 32)->nullable();
             $table->string('product_type', 255)->nullable();
             $table->string('handle', 255)->nullable();
             $table->string('template_suffix', 32)->nullable();

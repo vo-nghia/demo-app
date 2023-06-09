@@ -46,8 +46,9 @@
     "edit": "Edit product",
     "add": "Add product",
     "delete": "Delete product",
-    "created": "product created!",
-    "productsSyncToast": "product sync successfully!",
+    "created": "product created successfully!",
+    "edited": "product edited successfully!",
+    "productsSyncToast": "synced all products successfully!",
     "errorSyncProductsToast": "There was an error sync products",
     "productsDeletedToast": "delete product successfully!",
     "errorDeletedProductsToast": "There was an error delete products"
