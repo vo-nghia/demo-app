@@ -42,7 +42,7 @@ export default function Sync() {
       <Page fullWidth>
         <Layout>
           <Layout.Section>
-            <Button onClick={handlePopulate}>Sync product</Button>
+            <Button onClick={handlePopulate}>{ t("Product.sync") }</Button>
           </Layout.Section>
         </Layout>
       </Page>

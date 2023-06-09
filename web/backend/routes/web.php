@@ -113,16 +113,22 @@ Route::prefix('/api/products')->group(function () {
     Route::delete('/{id}', [ProductsController::class, 'destroy']);
 });
 
-Route::prefix('/api/stores')->group(function () {
-    Route::get('/', [StoresController::class]);
-});
-
 Route::prefix('/api/orders')->group(function () {
-    Route::get('/', [OrdersController::class]);
+    Route::get('/', [OrdersController::class, 'index']);
+    Route::post('/create', [OrdersController::class, 'store']);
+    Route::get('/sync', [OrdersController::class, 'sync']);
+    Route::get('/{id}', [OrdersController::class, 'show']);
+    Route::put('/{id}', [OrdersController::class, 'update']);
+    Route::delete('/{id}', [OrdersController::class, 'destroy']);
 });
 
 Route::prefix('/api/customers')->group(function () {
     Route::get('/', [CustomersController::class]);
+    Route::post('/create', [CustomersController::class, 'store']);
+    Route::get('/sync', [CustomersController::class, 'sync']);
+    Route::get('/{id}', [CustomersController::class, 'show']);
+    Route::put('/{id}', [CustomersController::class, 'update']);
+    Route::delete('/{id}', [CustomersController::class, 'destroy']);
 });
 
 Route::get('/api/token', function () {
@@ -130,6 +136,3 @@ Route::get('/api/token', function () {
         'token' => csrf_token(),
     ]);
 });
-
-// variants
-// order items

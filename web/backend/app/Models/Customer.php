@@ -3,12 +3,10 @@
 namespace App\Models;
 
 use Carbon\Carbon;
-use More\Laravel\Model;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use Dan\Shopify\Laravel\Traits\BelongsToStore;
-use More\Laravel\Traits\Model\User\AbbreviatesNames;
 
 /**
  * Class Customer
@@ -37,7 +35,7 @@ use More\Laravel\Traits\Model\User\AbbreviatesNames;
  */
 class Customer extends Model
 {
-    use AbbreviatesNames, BelongsToStore, SoftDeletes;
+    use SoftDeletes;
 
     /** @var string $table */
     protected $table = 'customers';
@@ -55,8 +53,7 @@ class Customer extends Model
 
     /** @var array $casts */
     protected $casts = [
-        'default_address' => 'array',
-        'tags' => 'array',
+        'default_address' => 'array'
     ];
 
     /**

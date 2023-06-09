@@ -8,9 +8,11 @@
     "yourAppIsReadyToExplore": "Your app is ready to explore! It contains everything you need to get started including the <PolarisLink>Polaris design system</PolarisLink>, <AdminApiLink>Shopify Admin API</AdminApiLink>, and <AppBridgeLink>App Bridge</AppBridgeLink> UI library and components."
   },
   "NavigationMenu": {
-    "syncProducts": "product sync",
-    "products": "products",
-    "orders": "orders",
+    "syncProducts": "Products sync",
+    "products": "Products",
+    "syncOrders": "Orders sync",
+    "orders": "Orders",
+    "syncCustomers": "Customers sync",
     "customers": "customers"
   },
   "NotFound": {
@@ -43,6 +45,7 @@
   },
   "Product": {
     "title": "This is product",
+    "sync": "Sync Products",
     "edit": "Edit product",
     "add": "Add product",
     "delete": "Delete product",
@@ -52,5 +55,31 @@
     "errorSyncProductsToast": "There was an error sync products",
     "productsDeletedToast": "delete product successfully!",
     "errorDeletedProductsToast": "There was an error delete products"
+  },
+  "Order": {
+    "title": "This is Order",
+    "sync": "Sync Orders",
+    "edit": "Edit order",
+    "add": "Add order",
+    "delete": "Delete order",
+    "created": "order created successfully!",
+    "edited": "order edited successfully!",
+    "ordersSyncToast": "synced all orders successfully!",
+    "errorSyncOrdersToast": "There was an error sync orders",
+    "ordersDeletedToast": "delete order successfully!",
+    "errorDeletedOrdersToast": "There was an error delete orders"
+  },
+  "Customer": {
+    "title": "This is Customer",
+    "sync": "Sync Customers",
+    "edit": "Edit Customer",
+    "add": "Add Customer",
+    "delete": "Delete Customer",
+    "created": "Customer created successfully!",
+    "edited": "Customer edited successfully!",
+    "customersSyncToast": "synced all Customers successfully!",
+    "errorSyncCustomersToast": "There was an error sync customers",
+    "customersDeletedToast": "delete customer successfully!",
+    "errorDeletedCustomersToast": "There was an error delete customer"
   }
 }

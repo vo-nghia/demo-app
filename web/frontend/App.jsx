@@ -30,12 +30,20 @@ export default function App() {
                   destination: "/products",
                 },
                 {
+                  label: t("NavigationMenu.syncOrders"),
+                  destination: "/orders/sync",
+                },
+                {
                   label: t("NavigationMenu.orders"),
                   destination: "/orders",
                 },
                 {
                   label: t("NavigationMenu.customers"),
-                  destination: "/orders",
+                  destination: "/customers",
+                },
+                {
+                  label: t("NavigationMenu.syncCustomers"),
+                  destination: "/customers/sync",
                 }
               ]}
             />
