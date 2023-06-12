@@ -90,4 +90,11 @@ class ProductRepository extends AbstractRepository
             'admin_graphql_api_id' => $variant['admin_graphql_api_id']
         ]);
     }
+
+    public function firstByFkWithTrashed(string $column, $value)
+    {
+        return $this->model::{ is_array($value) ? 'whereIn' : 'where' }($column, $value)
+            ->withTrashed()
+            ->first();
+    }
 }

@@ -17,8 +17,7 @@ use Shopify\Webhooks\Topics;
 use App\Http\Controllers\ProductsController;
 use App\Http\Controllers\OrdersController;
 use App\Http\Controllers\CustomersController;
-use App\Http\Controllers\StoresController;
-
+use App\Http\Controllers\Webhook\WebhookController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -135,4 +134,15 @@ Route::get('/api/token', function () {
     return response()->json([
         'token' => csrf_token(),
     ]);
+});
+
+Route::prefix('/api/webhooks')->group(function () {
+    Route::get('/', [WebhookController::class, 'index']);
+    Route::post('/create', [WebhookController::class, 'store']);
+
+    Route::prefix('/product')->as('.product')->controller('ShopifyProductController')->group(function () {
+        Route::post('create', 'create')->name('create');
+        Route::post('update', 'update')->name('update');
+        Route::post('delete', 'delete')->name('delete');
+    });
 });

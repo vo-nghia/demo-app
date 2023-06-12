@@ -13,7 +13,8 @@
     "syncOrders": "Orders sync",
     "orders": "Orders",
     "syncCustomers": "Customers sync",
-    "customers": "customers"
+    "customers": "Customers",
+    "webhooks": "Webhooks"
   },
   "NotFound": {
     "description": "Check the URL and try again, or use the search bar to find what you need.",
@@ -81,5 +82,10 @@
     "errorSyncCustomersToast": "There was an error sync customers",
     "customersDeletedToast": "delete customer successfully!",
     "errorDeletedCustomersToast": "There was an error delete customer"
+  },
+  "Webhook": {
+    "title": "This is Webhook",
+    "add": "Add Webhook",
+    "created": "Webhook created successfully!"
   }
 }
