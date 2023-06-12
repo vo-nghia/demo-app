@@ -51,9 +51,9 @@ class ShopifyProductController extends Controller
 
     public function delete(DeleteProductRequest $request): JsonResponse
     {
+        Log::info('Shopify Webhook Delete Product', $request->all());
         // Handling for deleted product
         $result = $this->productService->delete($request->validated());
-        Log::info('Shopify Webhook Delete Product - Result: ', $result);
         return empty($result) ? $this->responseFailed() : $this->success();
     }
 }

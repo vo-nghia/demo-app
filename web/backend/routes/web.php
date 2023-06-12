@@ -18,6 +18,7 @@ use App\Http\Controllers\ProductsController;
 use App\Http\Controllers\OrdersController;
 use App\Http\Controllers\CustomersController;
 use App\Http\Controllers\Webhook\WebhookController;
+use App\Http\Controllers\Webhook\ShopifyProductController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -140,9 +141,9 @@ Route::prefix('/api/webhooks')->group(function () {
     Route::get('/', [WebhookController::class, 'index']);
     Route::post('/create', [WebhookController::class, 'store']);
 
-    Route::prefix('/product')->as('.product')->controller('ShopifyProductController')->group(function () {
-        Route::post('create', 'create')->name('create');
-        Route::post('update', 'update')->name('update');
-        Route::post('delete', 'delete')->name('delete');
-    });
+    Route::prefix('/products')->group(function () {
+        Route::post('/create', [ShopifyProductController::class, 'create']);
+        Route::post('/update', [ShopifyProductController::class, 'update']);
+        Route::post('/delete', [ShopifyProductController::class, 'delete']);
+    }); 
 });
