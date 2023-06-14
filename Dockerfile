@@ -9,7 +9,10 @@ RUN apk update && apk add --update nodejs npm \
 
 RUN docker-php-ext-install pdo
 
-COPY --chown=www-data:www-data web /app
+# Create the 'www' user and group
+RUN addgroup -g 1000 www && adduser -D -G www -u 1000 www
+
+COPY --chown=www:www web /app
 WORKDIR /app
 
 # Overwrite default nginx config
